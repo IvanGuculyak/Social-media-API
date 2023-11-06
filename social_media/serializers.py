@@ -69,7 +69,7 @@ class PostSerializer(serializers.ModelSerializer):
             "content",
             "author",
             "scheduled_time",
-            "image"
+            "post_image"
         )
         read_only_fields = ("author",)
 
@@ -128,7 +128,21 @@ class PostDetailSerializer(serializers.ModelSerializer):
     likes = serializers.IntegerField(source="likes.count", read_only=True)
     write_only_fields = ("scheduled_time",)
 
-    class PostImageSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Post
-            fields = ("post_image",)
+    class Meta:
+        model = Post
+        fields = (
+            "author",
+            "title",
+            "content",
+            "created_at",
+            "post_image",
+            "comments",
+            "likes",
+            "scheduled_time",
+        )
+
+
+class PostImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ("post_image",)
