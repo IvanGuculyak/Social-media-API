@@ -59,7 +59,7 @@ class Post(models.Model):
     title = models.CharField(max_length=64, default="Title")
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    image = models.ImageField(
+    post_image = models.ImageField(
         upload_to=post_image_file_path,
         blank=True,
         null=True
@@ -70,6 +70,9 @@ class Post(models.Model):
         blank=True
     )
     scheduled_time = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
 
 
 class Comment(models.Model):
