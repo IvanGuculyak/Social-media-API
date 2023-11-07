@@ -17,14 +17,14 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def get_object(self):
+    def get_object(self) -> object:
         return self.request.user
 
 
 class LogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request):
+    def post(self, request) -> Response:
         try:
             refresh_token = request.data["refresh_token"]
             token = RefreshToken(refresh_token)

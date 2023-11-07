@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.text import slugify
 
 
-def profile_image_file_path(instance, filename):
+def profile_image_file_path(instance, filename) -> str:
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.username)}-{uuid.uuid4()}{extension}"
 
@@ -36,14 +36,14 @@ class Profile(models.Model):
     )
     biography = models.TextField(blank=True)
 
-    def follow(self, profile):
+    def follow(self, profile) -> None:
         self.following.add(profile)
 
-    def unfollow(self, profile):
+    def unfollow(self, profile) -> None:
         self.following.remove(profile)
 
 
-def post_image_file_path(instance, filename):
+def post_image_file_path(instance, filename) -> str:
     _, extension = os.path.splitext(filename)
     filename = f"{slugify(instance.created_at)}-{uuid.uuid4()}{extension}"
 

@@ -1,3 +1,6 @@
+from urllib.request import Request
+
+from django.db.models import QuerySet
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
@@ -23,7 +26,7 @@ from social_media.serializers import (
 class ProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsProfileOwner]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = Profile.objects.all().prefetch_related(
             "followers", "following"
         )
@@ -49,7 +52,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         detail=True,
         permission_classes=[IsAuthenticated]
     )
-    def follow(self, request, pk=None):
+    def follow(self, request: Request, pk: int = None) -> Response:
         profile = self.get_object()
         user_profile = self.request.user.profile
 
@@ -69,7 +72,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         detail=True,
         permission_classes=[IsAuthenticated]
     )
-    def unfollow(self, request, pk=None):
+    def unfollow(self, request: Request, pk: int = None) -> Response:
         profile = self.get_object()
         user_profile = self.request.user.profile
 
@@ -91,7 +94,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         url_path="upload_image",
         permission_classes=[IsAuthenticated]
     )
-    def upload_image(self, request, pk=None):
+    def upload_image(self, request: Request, pk: int = None) -> Response:
         profile = self.get_object()
         serializer = self.get_serializer(profile, data=request.data)
 
@@ -109,14 +112,14 @@ class ProfileViewSet(viewsets.ModelViewSet):
             ),
         ]
     )
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> list:
         return super().list(request, *args, **kwargs)
 
 
 class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsPostOwner]
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = (
             Post.objects.all()
             .prefetch_related("comments")
@@ -154,7 +157,7 @@ class PostViewSet(viewsets.ModelViewSet):
         url_path="upload_image",
         permission_classes=[IsAuthenticated, IsPostOwner]
     )
-    def upload_image(self, request, pk=None):
+    def upload_image(self, request: Request, pk: int = None) -> Response:
         post = self.get_object()
         serializer = self.get_serializer(post, data=request.data)
 
@@ -168,7 +171,7 @@ class PostViewSet(viewsets.ModelViewSet):
         detail=True,
         permission_classes=[IsAuthenticated]
     )
-    def comment(self, request, pk=None):
+    def comment(self, request: Request, pk: int = None) -> Response:
         post = self.get_object()
         user_profile = self.request.user.profile
         serializer = CommentSerializer(data=request.data)
@@ -190,7 +193,7 @@ class PostViewSet(viewsets.ModelViewSet):
         detail=True,
         permission_classes=[IsAuthenticated]
     )
-    def like_unlike(self, request, pk=None):
+    def like_unlike(self, request: Request, pk: int = None) -> Response:
         post = self.get_object()
         user_profile = self.request.user.profile
 
@@ -212,7 +215,7 @@ class PostViewSet(viewsets.ModelViewSet):
         detail=True,
         permission_classes=[IsAuthenticated]
     )
-    def liked_post(self, request):
+    def liked_post(self, request: Request) -> Response:
         user_profile = self.request.user.profile
         queryset = Post.objects.filter(likes=user_profile)
         serializer = self.get_serializer(queryset, many=True)
@@ -227,5 +230,5 @@ class PostViewSet(viewsets.ModelViewSet):
             ),
         ]
     )
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> list:
         return super().list(request, *args, **kwargs)

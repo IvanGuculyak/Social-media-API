@@ -15,7 +15,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ("username", "profile_image", "biography")
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
         user = self.context["request"].user
         attrs["user"] = user
         return attrs
@@ -73,13 +73,13 @@ class PostSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ("author",)
 
-    def validate(self, attrs):
+    def validate(self, attrs) -> dict:
         user_profile = self.context["request"].user.profile
         attrs["author"] = user_profile
 
         return attrs
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> dict:
         scheduled_time = validated_data.get("scheduled_time")
 
         if scheduled_time:
