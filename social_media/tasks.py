@@ -5,7 +5,7 @@ from social_media.models import Post
 
 
 @shared_task
-def create_scheduled_post(title, content, author, scheduled_time, post_image=None):
+def create_scheduled_post(title, content, author, scheduled_time, post_image=None) -> int:
     scheduled_time = timezone.make_aware(scheduled_time)
     post = Post.objects.create(
         title=title,
